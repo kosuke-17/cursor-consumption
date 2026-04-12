@@ -48,3 +48,23 @@ model Config {
 
   @@map("config")
 }
+
+model HookEvent {
+  id             Int      @id @default(autoincrement())
+  timestamp      DateTime @default(now())
+  hookEventName  String
+  model          String?
+  conversationId String?
+  generationId   String?
+  durationMs     Int?
+  toolName       String?
+  userEmail      String?
+  workspaceRoot  String?
+  cursorVersion  String?
+  rawPayload     Json?
+
+  @@index([timestamp])
+  @@index([model])
+  @@index([conversationId])
+  @@map("hook_events")
+}
