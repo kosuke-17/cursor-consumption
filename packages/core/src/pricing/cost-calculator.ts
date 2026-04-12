@@ -1,5 +1,5 @@
 import type { PricingEntry } from "./pricing-table.js";
-import type { UsageItem } from "../api/types.js";
+import type { UsageItem } from "../storage/queries.js";
 
 export class CostCalculator {
   private pricingMap: Map<string, PricingEntry>;

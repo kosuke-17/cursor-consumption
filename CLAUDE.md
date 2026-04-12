@@ -4,43 +4,40 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**cursor-consumption** (`ccm`) is a tool for tracking and analyzing Cursor AI editor token consumption and costs. It retrieves usage data from Cursor's APIs, stores it locally, and provides CLI + Web dashboard interfaces for cost analysis.
+**cursor-consumption** is a tool for tracking and analyzing Cursor AI editor token consumption and costs. It captures usage events via Cursor's Hooks feature, stores them in PostgreSQL, and provides a Next.js Web dashboard for cost analysis.
 
 ## Architecture
 
-Monorepo with three packages under `packages/`:
-- `core` — Shared business logic: auth token resolution, Cursor API client, cost calculation, SQLite storage
-- `cli` — CLI application (`ccm` command) using commander
-- `web` — Next.js dashboard (Phase 2)
+Monorepo with two packages under `packages/`:
+- `core` — Shared business logic: cost calculation, Prisma storage
+- `web` — Next.js dashboard with Route Handlers for data ingestion
+
+Data flow: Cursor Hooks (`hooks.json` + `.cursor/hooks/audit.mjs`) → Next.js Route Handler (POST) → PostgreSQL
 
 Key design decisions:
-- **PostgreSQL backend**: Usage data stored in local PostgreSQL
+- **PostgreSQL backend**: Usage data stored in local PostgreSQL (Docker Compose)
 - **Prisma ORM**: Type-safe queries, migration management via `prisma/schema.prisma`
-- **Token resolution chain**: Tries SQLite (Cursor's state.vscdb) → env var → manual input
 - **Pricing table externalized**: `pricing/models.json` for easy updates when Cursor changes rates
 
 ## Tech Stack
 
-TypeScript (strict), Node.js 20 LTS, pnpm workspaces + turborepo, PostgreSQL + Prisma, sql.js (Cursor DB reader), Vitest, Next.js (App Router), shadcn/ui + Tailwind, Recharts
+TypeScript (strict), Node.js 20 LTS, pnpm workspaces + turborepo, PostgreSQL + Prisma, Vitest, Next.js (App Router), shadcn/ui + Tailwind, Recharts
 
 ## Key Documents
 
 - `docs/requirements.md` — Full requirements definition (Japanese)
-- `docs/system-design.md` — System design with architecture, DB schema, CLI design, API routes (Japanese)
+- `docs/system-design.md` — System design with architecture, DB schema, API routes (Japanese)
 
 ## Development
 
-Project is pre-implementation. Start with Phase 1 steps defined in `docs/system-design.md` section 11.
-
 ```bash
-# Once set up:
-pnpm install              # Install dependencies
-npx prisma migrate dev    # Run DB migrations
-npx prisma generate       # Generate Prisma Client
-pnpm build                # Build all packages
-pnpm test                 # Run tests (Vitest)
-pnpm --filter cli dev     # Run CLI in dev mode
-pnpm --filter web dev     # Run web dashboard
+docker compose up -d       # Start PostgreSQL
+pnpm install               # Install dependencies
+npx prisma generate        # Generate Prisma Client
+npx prisma migrate dev     # Run DB migrations
+pnpm build                 # Build all packages
+pnpm test                  # Run tests (Vitest)
+pnpm --filter web dev      # Run web dashboard
 ```
 
 Requires `DATABASE_URL` in `.env` (e.g. `postgresql://user:password@localhost:5432/cursor_consumption`).

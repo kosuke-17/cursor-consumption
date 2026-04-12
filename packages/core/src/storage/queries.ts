@@ -1,5 +1,16 @@
 import { getPrisma } from "./prisma.js";
-import type { UsageItem } from "../api/types.js";
+
+export interface UsageItem {
+  timestamp: Date;
+  model: string;
+  feature: string;
+  inputTokens: number;
+  outputTokens: number;
+  cacheReadTokens: number;
+  cacheWriteTokens: number;
+  chargedCents: number | null;
+  calculatedCostCents: number;
+}
 
 export async function saveUsageEvents(events: UsageItem[]): Promise<number> {
   const prisma = getPrisma();
@@ -196,34 +207,6 @@ export async function upsertDailySummaries(
       },
     });
   }
-}
-
-export async function saveSyncLog(
-  status: string,
-  eventsCount: number,
-  errorMessage?: string
-): Promise<void> {
-  const prisma = getPrisma();
-  await prisma.syncLog.create({
-    data: {
-      syncedAt: new Date(),
-      status,
-      eventsCount,
-      errorMessage: errorMessage ?? null,
-    },
-  });
-}
-
-export async function getLatestSyncLog(): Promise<{
-  syncedAt: Date;
-  status: string;
-  eventsCount: number;
-} | null> {
-  const prisma = getPrisma();
-  return prisma.syncLog.findFirst({
-    orderBy: { syncedAt: "desc" },
-    select: { syncedAt: true, status: true, eventsCount: true },
-  });
 }
 
 export async function getConfig(key: string): Promise<string | null> {

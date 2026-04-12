@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { CostCalculator } from "./cost-calculator.js";
 import type { PricingEntry } from "./pricing-table.js";
-import type { UsageItem } from "../api/types.js";
+import type { UsageItem } from "../storage/queries.js";
 
 const testPricing: PricingEntry[] = [
   {

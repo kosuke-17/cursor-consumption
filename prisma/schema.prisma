@@ -28,16 +28,6 @@ model UsageEvent {
   @@map("usage_events")
 }
 
-model SyncLog {
-  id           Int      @id @default(autoincrement())
-  syncedAt     DateTime
-  status       String
-  eventsCount  Int      @default(0)
-  errorMessage String?
-
-  @@map("sync_log")
-}
-
 model DailySummary {
   date              DateTime @db.Date
   model             String
