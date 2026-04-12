@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../packages/core/src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model UsageEvent {
+  id                  Int      @id @default(autoincrement())
+  timestamp           DateTime
+  model               String
+  feature             String
+  inputTokens         Int      @default(0)
+  outputTokens        Int      @default(0)
+  cacheReadTokens     Int      @default(0)
+  cacheWriteTokens    Int      @default(0)
+  chargedCents        Float?
+  calculatedCostCents Float
+  rawResponse         Json?
+  syncedAt            DateTime
+
+  @@unique([timestamp, model, feature])
+  @@index([timestamp])
+  @@index([model])
+  @@index([timestamp, model])
+  @@map("usage_events")
+}
+
+model SyncLog {
+  id           Int      @id @default(autoincrement())
+  syncedAt     DateTime
+  status       String
+  eventsCount  Int      @default(0)
+  errorMessage String?
+
+  @@map("sync_log")
+}
+
+model DailySummary {
+  date              DateTime @db.Date
+  model             String
+  feature           String
+  totalInputTokens  Int      @default(0)
+  totalOutputTokens Int      @default(0)
+  totalCostCents    Float    @default(0)
+  requestCount      Int      @default(0)
+
+  @@id([date, model, feature])
+  @@index([date])
+  @@map("daily_summary")
+}
+
+model Config {
+  key   String @id
+  value String
+
+  @@map("config")
+}
