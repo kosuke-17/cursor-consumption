@@ -9,3 +9,5 @@ packages/core/src/generated/
 # Cursor Hooks audit log (can grow large)
 .cursor/hooks/audit.json
 .cursor/mcp.json
+
+.claude/mcp.json
