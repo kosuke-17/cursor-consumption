@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [{ "command": "node .cursor/hooks/audit.mjs", "timeout": 5 }],
+    "sessionEnd": [{ "command": "node .cursor/hooks/audit.mjs", "timeout": 5 }],
+    "preToolUse": [{ "command": "node .cursor/hooks/audit.mjs", "timeout": 5 }],
+    "postToolUse": [{ "command": "node .cursor/hooks/audit.mjs", "timeout": 5 }],
+    "postToolUseFailure": [{ "command": "node .cursor/hooks/audit.mjs", "timeout": 5 }],
+    "beforeShellExecution": [{ "command": "node .cursor/hooks/audit.mjs", "timeout": 5 }],
+    "afterShellExecution": [{ "command": "node .cursor/hooks/audit.mjs", "timeout": 5 }],
+    "beforeSubmitPrompt": [{ "command": "node .cursor/hooks/audit.mjs", "timeout": 5 }],
+    "afterAgentResponse": [{ "command": "node .cursor/hooks/audit.mjs", "timeout": 5 }],
+    "afterAgentThought": [{ "command": "node .cursor/hooks/audit.mjs", "timeout": 5 }],
+    "beforeReadFile": [{ "command": "node .cursor/hooks/audit.mjs", "timeout": 5 }],
+    "afterFileEdit": [{ "command": "node .cursor/hooks/audit.mjs", "timeout": 5 }],
+    "stop": [{ "command": "node .cursor/hooks/audit.mjs", "timeout": 5 }],
+    "subagentStart": [{ "command": "node .cursor/hooks/audit.mjs", "timeout": 5 }],
+    "subagentStop": [{ "command": "node .cursor/hooks/audit.mjs", "timeout": 5 }],
+    "beforeMCPExecution": [{ "command": "node .cursor/hooks/audit.mjs", "timeout": 5 }],
+    "afterMCPExecution": [{ "command": "node .cursor/hooks/audit.mjs", "timeout": 5 }],
+    "preCompact": [{ "command": "node .cursor/hooks/audit.mjs", "timeout": 5 }],
+    "beforeTabFileRead": [{ "command": "node .cursor/hooks/audit.mjs", "timeout": 5 }],
+    "afterTabFileEdit": [{ "command": "node .cursor/hooks/audit.mjs", "timeout": 5 }]
+  }
+}
