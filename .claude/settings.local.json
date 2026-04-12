@@ -5,7 +5,8 @@
       "WebFetch(domain:cursor.com)",
       "WebFetch(domain:github.com)",
       "WebFetch(domain:docs.cursor.com)",
-      "Bash(npx vitest:*)"
+      "Bash(npx vitest:*)",
+      "Bash(pnpm test:*)"
     ]
   }
 }

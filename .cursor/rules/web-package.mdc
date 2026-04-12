@@ -1,0 +1,40 @@
+---
+description: packages/web（Next.js ダッシュボード）の構成・命名・データ境界
+globs: packages/web/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# packages/web コーディングルール
+
+このリポジトリの Web 層は **Next.js（App Router）**、`TypeScript strict`、**shadcn/ui + Tailwind CSS**、**Recharts** を前提とする。ランタイムは **Node.js 20 LTS**、パッケージは **pnpm**（モノレポの `@cursor-consumption/core` を利用）。
+
+## ディレクトリと責務
+
+- **`src/app/`** — App Router のページとレイアウト（例: `page.tsx`、`models/page.tsx`、`history/page.tsx`）。
+- **`src/app/api/**/route.ts`** — Route Handler のみでサーバー API を定義。クライアントから DB や Prisma を直接呼ばない。
+- **`src/app/components/`** — ページ用の再利用 UI。チャートは Recharts を使う。
+
+## データ境界
+
+- **永続化・コスト計算・Prisma** は `@cursor-consumption/core` に寄せ、Web では薄いハンドラと表示に徹する。
+- ダッシュボードは **PostgreSQL 経由の内部 API** でデータを読む設計。ブラウザや Route Handler から Cursor 内部 API（`api2.cursor.sh` 等）を直接叩かない（取り込みは Hooks → POST の流れに合わせる）。
+- 料金テーブルはリポジトリ直下の **`pricing/models.json`** を参照する方針と整合させる。
+
+## API・ルート（実装時の目安）
+
+設計ドキュメントに合わせ、例として次を想定する。
+
+- `POST /api/events` — Hooks からのイベント受信・保存
+- `GET /api/usage/summary` | `daily` | `models` — 集計・一覧
+
+（パスは `docs/plan.md` / `docs/system-design.md` と齟齬が出たらドキュメント側を正とし、コードを追随させる。）
+
+## 命名・スタイル
+
+- **コンポーネントファイルは kebab-case**（例: `usage-summary.tsx`、`cost-chart.tsx`）。
+- **React**: 関数コンポーネント。クライアントが必要なら `"use client"` をファイル先頭に明示。
+- **テスト**: Vitest（Web 固有のテストは `packages/web` に配置）。
+
+## セキュリティ
+
+- セッショントークンや秘密はログ・クライアントに出さない。`DATABASE_URL` は環境変数のみ。
