@@ -151,7 +151,6 @@ model FileEvent {
   transcriptPath  String?
   // file fields
   filePath        String
-  content         String?  // beforeReadFile / beforeTabFileRead
   edits           Json?    // afterFileEdit / afterTabFileEdit
   attachments     Json?    // beforeReadFile only
 
@@ -195,6 +194,11 @@ model AgentEvent {
   agentTranscriptPath String?
   // afterAgentResponse / afterAgentThought fields
   text            String?
+  // token usage (afterAgentResponse / stop)
+  inputTokens     Int?
+  outputTokens    Int?
+  cacheReadTokens Int?
+  cacheWriteTokens Int?
 
   @@index([loggedAt])
   @@index([conversationId])

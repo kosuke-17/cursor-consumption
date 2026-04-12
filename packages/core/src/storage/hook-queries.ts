@@ -95,7 +95,6 @@ async function saveFileEvent(payload: Payload): Promise<void> {
     data: {
       ...extractCommonFields(payload),
       filePath: payload.file_path as string,
-      content: (payload.content as string) ?? null,
       edits: (payload.edits as object) ?? undefined,
       attachments: (payload.attachments as object) ?? undefined,
     },
@@ -125,6 +124,10 @@ async function saveAgentEvent(payload: Payload): Promise<void> {
       modifiedFiles: (payload.modified_files as object) ?? undefined,
       agentTranscriptPath: (payload.agent_transcript_path as string) ?? null,
       text: (payload.text as string) ?? null,
+      inputTokens: payload.input_tokens != null ? Number(payload.input_tokens) : null,
+      outputTokens: payload.output_tokens != null ? Number(payload.output_tokens) : null,
+      cacheReadTokens: payload.cache_read_tokens != null ? Number(payload.cache_read_tokens) : null,
+      cacheWriteTokens: payload.cache_write_tokens != null ? Number(payload.cache_write_tokens) : null,
     },
   });
 }
@@ -170,4 +173,61 @@ export async function saveHookEvent(payload: Payload): Promise<void> {
     throw new Error(`Unknown hook event: ${eventName}`);
   }
   await SAVE_FNS[table](payload);
+}
+
+// ─── Query functions ───
+
+export async function getToolEvents(limit = 100) {
+  return getPrisma().toolEvent.findMany({
+    orderBy: { loggedAt: "desc" },
+    take: limit,
+  });
+}
+
+export async function getShellEvents(limit = 100) {
+  return getPrisma().shellEvent.findMany({
+    orderBy: { loggedAt: "desc" },
+    take: limit,
+  });
+}
+
+export async function getMcpEvents(limit = 100) {
+  return getPrisma().mcpEvent.findMany({
+    orderBy: { loggedAt: "desc" },
+    take: limit,
+  });
+}
+
+export async function getFileEvents(limit = 100) {
+  return getPrisma().fileEvent.findMany({
+    orderBy: { loggedAt: "desc" },
+    take: limit,
+  });
+}
+
+export async function getAgentEvents(limit = 100) {
+  return getPrisma().agentEvent.findMany({
+    orderBy: { loggedAt: "desc" },
+    take: limit,
+  });
+}
+
+export async function getSessionEvents(limit = 100) {
+  return getPrisma().sessionEvent.findMany({
+    orderBy: { loggedAt: "desc" },
+    take: limit,
+  });
+}
+
+export async function getHookEventCounts() {
+  const prisma = getPrisma();
+  const [tool, shell, mcp, file, agent, session] = await Promise.all([
+    prisma.toolEvent.count(),
+    prisma.shellEvent.count(),
+    prisma.mcpEvent.count(),
+    prisma.fileEvent.count(),
+    prisma.agentEvent.count(),
+    prisma.sessionEvent.count(),
+  ]);
+  return { tool, shell, mcp, file, agent, session };
 }

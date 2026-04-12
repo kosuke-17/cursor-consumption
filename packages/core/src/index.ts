@@ -5,7 +5,17 @@ export { CostCalculator } from "./pricing/cost-calculator.js";
 
 // Storage
 export { getPrisma, disconnect } from "./storage/prisma.js";
-export { saveHookEvent, TABLE_MAP } from "./storage/hook-queries.js";
+export {
+  saveHookEvent,
+  TABLE_MAP,
+  getToolEvents,
+  getShellEvents,
+  getMcpEvents,
+  getFileEvents,
+  getAgentEvents,
+  getSessionEvents,
+  getHookEventCounts,
+} from "./storage/hook-queries.js";
 export type { UsageItem } from "./storage/queries.js";
 export {
   saveUsageEvents,
