@@ -49,22 +49,196 @@ model Config {
   @@map("config")
 }
 
-model HookEvent {
-  id             Int      @id @default(autoincrement())
-  timestamp      DateTime @default(now())
-  hookEventName  String
-  model          String?
-  conversationId String?
-  generationId   String?
-  durationMs     Int?
-  toolName       String?
-  userEmail      String?
-  workspaceRoot  String?
-  cursorVersion  String?
-  rawPayload     Json?
+// ─── Hook Event Tables ───
+// 共通フィールド: conversation_id, generation_id, model, cursor_version,
+//   workspace_root, user_email, transcript_path は全テーブルに含む
 
-  @@index([timestamp])
-  @@index([model])
+// 1. ToolEvent: preToolUse / postToolUse / postToolUseFailure
+model ToolEvent {
+  id              Int      @id @default(autoincrement())
+  loggedAt        DateTime
+  hookEventName   String   // preToolUse | postToolUse | postToolUseFailure
+  conversationId  String
+  generationId    String
+  model           String?
+  cursorVersion   String?
+  workspaceRoot   String?
+  userEmail       String?
+  transcriptPath  String?
+  // tool fields
+  toolName        String
+  toolInput       Json?
+  toolOutput      String?  // postToolUse only
+  toolUseId       String?
+  cwd             String?
+  duration        Float?   // postToolUse / postToolUseFailure
+  agentMessage    String?  // preToolUse only
+  // failure fields (postToolUseFailure only)
+  errorMessage    String?
+  failureType     String?  // timeout | error | permission_denied
+  isInterrupt     Boolean?
+
+  @@index([loggedAt])
   @@index([conversationId])
-  @@map("hook_events")
+  @@index([hookEventName])
+  @@index([toolName])
+  @@map("hook_tool_events")
+}
+
+// 2. ShellEvent: beforeShellExecution / afterShellExecution
+model ShellEvent {
+  id              Int      @id @default(autoincrement())
+  loggedAt        DateTime
+  hookEventName   String   // beforeShellExecution | afterShellExecution
+  conversationId  String
+  generationId    String
+  model           String?
+  cursorVersion   String?
+  workspaceRoot   String?
+  userEmail       String?
+  transcriptPath  String?
+  // shell fields
+  command         String
+  output          String?  // afterShellExecution only
+  duration        Float?   // afterShellExecution only
+  sandbox         Boolean?
+  cwd             String?
+
+  @@index([loggedAt])
+  @@index([conversationId])
+  @@index([hookEventName])
+  @@map("hook_shell_events")
+}
+
+// 3. McpEvent: beforeMCPExecution / afterMCPExecution
+model McpEvent {
+  id              Int      @id @default(autoincrement())
+  loggedAt        DateTime
+  hookEventName   String   // beforeMCPExecution | afterMCPExecution
+  conversationId  String
+  generationId    String
+  model           String?
+  cursorVersion   String?
+  workspaceRoot   String?
+  userEmail       String?
+  transcriptPath  String?
+  // mcp fields
+  toolName        String
+  toolInput       String?
+  resultJson      String?  // afterMCPExecution only
+  duration        Float?   // afterMCPExecution only
+  url             String?
+  command         String?
+
+  @@index([loggedAt])
+  @@index([conversationId])
+  @@index([hookEventName])
+  @@index([toolName])
+  @@map("hook_mcp_events")
+}
+
+// 4. FileEvent: beforeReadFile / afterFileEdit / beforeTabFileRead / afterTabFileEdit
+model FileEvent {
+  id              Int      @id @default(autoincrement())
+  loggedAt        DateTime
+  hookEventName   String   // beforeReadFile | afterFileEdit | beforeTabFileRead | afterTabFileEdit
+  conversationId  String
+  generationId    String
+  model           String?
+  cursorVersion   String?
+  workspaceRoot   String?
+  userEmail       String?
+  transcriptPath  String?
+  // file fields
+  filePath        String
+  content         String?  // beforeReadFile / beforeTabFileRead
+  edits           Json?    // afterFileEdit / afterTabFileEdit
+  attachments     Json?    // beforeReadFile only
+
+  @@index([loggedAt])
+  @@index([conversationId])
+  @@index([hookEventName])
+  @@index([filePath])
+  @@map("hook_file_events")
+}
+
+// 5. AgentEvent: subagentStart / subagentStop / afterAgentResponse / afterAgentThought / stop
+model AgentEvent {
+  id              Int      @id @default(autoincrement())
+  loggedAt        DateTime
+  hookEventName   String   // subagentStart | subagentStop | afterAgentResponse | afterAgentThought | stop
+  conversationId  String
+  generationId    String
+  model           String?
+  cursorVersion   String?
+  workspaceRoot   String?
+  userEmail       String?
+  transcriptPath  String?
+  // subagent fields
+  subagentId      String?
+  subagentType    String?
+  task            String?
+  parentConversationId String?
+  toolCallId      String?
+  subagentModel   String?
+  isParallelWorker Boolean?
+  gitBranch       String?
+  // subagentStop fields
+  status          String?  // completed | error | aborted (also used by stop)
+  description     String?
+  summary         String?
+  durationMs      Int?
+  messageCount    Int?
+  toolCallCount   Int?
+  loopCount       Int?
+  modifiedFiles   Json?    // string[]
+  agentTranscriptPath String?
+  // afterAgentResponse / afterAgentThought fields
+  text            String?
+
+  @@index([loggedAt])
+  @@index([conversationId])
+  @@index([hookEventName])
+  @@index([subagentId])
+  @@map("hook_agent_events")
+}
+
+// 6. SessionEvent: sessionStart / sessionEnd / beforeSubmitPrompt / preCompact
+model SessionEvent {
+  id              Int      @id @default(autoincrement())
+  loggedAt        DateTime
+  hookEventName   String   // sessionStart | sessionEnd | beforeSubmitPrompt | preCompact
+  conversationId  String
+  generationId    String
+  model           String?
+  cursorVersion   String?
+  workspaceRoot   String?
+  userEmail       String?
+  transcriptPath  String?
+  // session fields
+  sessionId       String?
+  isBackgroundAgent Boolean?
+  composerMode    String?  // agent | ask | edit
+  // sessionEnd fields
+  reason          String?  // completed | aborted | error | window_close | user_close
+  durationMs      Int?
+  finalStatus     String?
+  errorMessage    String?
+  // beforeSubmitPrompt fields
+  prompt          String?
+  attachments     Json?
+  // preCompact fields
+  trigger         String?  // auto | manual
+  contextUsagePercent Float?
+  contextTokens   Int?
+  contextWindowSize Int?
+  messageCount    Int?
+  messagesToCompact Int?
+  isFirstCompaction Boolean?
+
+  @@index([loggedAt])
+  @@index([conversationId])
+  @@index([hookEventName])
+  @@index([sessionId])
+  @@map("hook_session_events")
 }

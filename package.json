@@ -11,9 +11,9 @@
     "test": "turbo test",
     "lint": "turbo lint",
     "format": "prettier --write .",
-    "postinstall": "prisma generate",
-    "db:migrate": "prisma migrate dev",
-    "db:generate": "prisma generate"
+    "db:migrate": "prisma migrate dev --config prisma/prisma.config.ts",
+    "db:generate": "prisma generate --config prisma/prisma.config.ts",
+    "db:reset": "prisma migrate reset --config prisma/prisma.config.ts"
   },
   "devDependencies": {
     "turbo": "^2.4.0",
