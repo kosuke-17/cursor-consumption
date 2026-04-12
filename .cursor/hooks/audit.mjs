@@ -47,6 +47,18 @@ async function main() {
   } catch (err) {
     console.error("[audit.mjs] write failed:", err?.message ?? err);
   }
+
+  // Send to API (fire-and-forget, silent failure)
+  try {
+    await fetch("http://localhost:3000/api/hooks", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(entry),
+      signal: AbortSignal.timeout(3000),
+    });
+  } catch {
+    // Silent failure — audit.json serves as backup
+  }
 }
 
 main()

@@ -5,6 +5,7 @@ dist/
 .turbo/
 coverage/
 packages/core/src/generated/
+packages/web/.next
 
 # Cursor Hooks audit log (can grow large)
 .cursor/hooks/audit.json
