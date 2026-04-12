@@ -4,7 +4,8 @@
       "WebSearch",
       "WebFetch(domain:cursor.com)",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:docs.cursor.com)"
+      "WebFetch(domain:docs.cursor.com)",
+      "Bash(npx vitest:*)"
     ]
   }
 }
