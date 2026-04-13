@@ -17,7 +17,13 @@ function truncate(v: unknown, max = 80) {
   return s.length > max ? s.slice(0, max) + "..." : s;
 }
 
-function Badge({ children, color }: { children: React.ReactNode; color: string }) {
+function Badge({
+  children,
+  color,
+}: {
+  children: React.ReactNode;
+  color: string;
+}) {
   return (
     <span
       className={`inline-block px-2 py-0.5 text-xs font-medium rounded ${color}`}
@@ -50,7 +56,9 @@ export function EventBadge({ name }: { name: string }) {
     beforeSubmitPrompt: "bg-cyan-900 text-cyan-300",
     preCompact: "bg-cyan-800 text-cyan-200",
   };
-  return <Badge color={colors[name] ?? "bg-gray-700 text-gray-300"}>{name}</Badge>;
+  return (
+    <Badge color={colors[name] ?? "bg-gray-700 text-gray-300"}>{name}</Badge>
+  );
 }
 
 export function EventTable({
@@ -80,8 +88,11 @@ export function EventTable({
         <table className="w-full text-sm">
           <thead className="bg-gray-900 text-gray-400 text-left">
             <tr>
-              {allColumns.map((col) => (
-                <th key={col.key} className="px-4 py-3 font-medium whitespace-nowrap">
+              {allColumns.map((col, i) => (
+                <th
+                  key={col.key}
+                  className="px-4 py-3 font-medium whitespace-nowrap"
+                >
                   {col.label}
                 </th>
               ))}
@@ -91,7 +102,10 @@ export function EventTable({
             {data.map((row, i) => (
               <tr key={i} className="hover:bg-gray-900/50">
                 {allColumns.map((col) => (
-                  <td key={col.key} className="px-4 py-3 whitespace-nowrap max-w-xs truncate">
+                  <td
+                    key={col.key}
+                    className="px-4 py-3 whitespace-nowrap max-w-xs truncate"
+                  >
                     {col.render
                       ? col.render(row[col.key], row)
                       : truncate(row[col.key])}

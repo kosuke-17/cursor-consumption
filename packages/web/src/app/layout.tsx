@@ -13,6 +13,7 @@ const NAV_ITEMS = [
   { href: "/hooks/file", label: "File" },
   { href: "/hooks/agent", label: "Agent" },
   { href: "/hooks/session", label: "Session" },
+  { href: "/hooks/commands", label: "Commands" },
 ];
 
 export default function RootLayout({

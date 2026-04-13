@@ -15,6 +15,7 @@ export {
   getAgentEvents,
   getSessionEvents,
   getHookEventCounts,
+  getCommandEvents,
 } from "./storage/hook-queries.js";
 export type { UsageItem } from "./storage/queries.js";
 export {

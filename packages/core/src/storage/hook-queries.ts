@@ -219,6 +219,17 @@ export async function getSessionEvents(limit = 100) {
   });
 }
 
+export async function getCommandEvents(limit = 200) {
+  return getPrisma().sessionEvent.findMany({
+    where: {
+      hookEventName: "beforeSubmitPrompt",
+      prompt: { startsWith: "/" },
+    },
+    orderBy: { loggedAt: "desc" },
+    take: limit,
+  });
+}
+
 export async function getHookEventCounts() {
   const prisma = getPrisma();
   const [tool, shell, mcp, file, agent, session] = await Promise.all([
