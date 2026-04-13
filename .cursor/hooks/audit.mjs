@@ -3,13 +3,7 @@
  * Cursor Hook: append stdin JSON (one event) to audit.json as a JSON array.
  * Always exits 0 so Cursor is never blocked.
  */
-import { readFileSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { stdin } from "node:process";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const LOG_PATH = join(__dirname, "audit.json");
 
 function readStdin() {
   return new Promise((resolve, reject) => {
@@ -34,20 +28,6 @@ async function main() {
     ...payload,
   };
 
-  try {
-    let entries = [];
-    try {
-      const existing = readFileSync(LOG_PATH, "utf8");
-      entries = JSON.parse(existing);
-    } catch {
-      // File doesn't exist or invalid JSON — start fresh
-    }
-    entries.push(entry);
-    writeFileSync(LOG_PATH, JSON.stringify(entries, null, 2) + "\n", "utf8");
-  } catch (err) {
-    console.error("[audit.mjs] write failed:", err?.message ?? err);
-  }
-
   // Send to API (fire-and-forget, silent failure)
   try {
     await fetch("http://localhost:3000/api/hooks", {
@@ -56,8 +36,12 @@ async function main() {
       body: JSON.stringify(entry),
       signal: AbortSignal.timeout(3000),
     });
-  } catch {
-    // Silent failure — audit.json serves as backup
+  } catch (err) {
+    const eventName = payload?.hook_event_name ?? "unknown";
+    console.error(
+      `[audit.mjsファイル] ${eventName}のhookイベントでエラーが発生しました`,
+      err,
+    );
   }
 }
 
