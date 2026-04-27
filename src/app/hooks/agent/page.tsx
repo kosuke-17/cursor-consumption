@@ -1,4 +1,4 @@
-import { getAgentEvents } from "@cursor-consumption/core";
+import { getAgentEvents } from "@/lib";
 import { EventTable } from "@/components/event-table";
 
 export default async function AgentEventsPage() {

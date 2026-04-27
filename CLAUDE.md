@@ -8,9 +8,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture
 
-Monorepo: Next.js app at the **repository root** (App Router, `src/`) plus a shared package:
-- `packages/core` — Shared business logic: cost calculation, Prisma storage
-- Root `src/app/api/**/route.ts` — Route Handlers for data ingestion
+Single Next.js app at the **repository root** (App Router):
+- `src/lib/` — Shared business logic: cost calculation, Prisma storage, hook event handlers
+- `src/app/api/**/route.ts` — Route Handlers for data ingestion
 
 Data flow: Cursor Hooks (`hooks.json` + `.cursor/hooks/audit.mjs`) → Next.js Route Handler (POST) → PostgreSQL
 
@@ -21,7 +21,7 @@ Key design decisions:
 
 ## Tech Stack
 
-TypeScript (strict), Node.js 20 LTS, pnpm workspaces + turborepo, PostgreSQL + Prisma, Vitest, Next.js (App Router), shadcn/ui + Tailwind, Recharts
+TypeScript (strict), Node.js 20 LTS, pnpm, PostgreSQL + Prisma, Vitest, Next.js (App Router), shadcn/ui + Tailwind, Recharts
 
 ## Key Documents
 
@@ -33,9 +33,8 @@ TypeScript (strict), Node.js 20 LTS, pnpm workspaces + turborepo, PostgreSQL + P
 ```bash
 docker compose up -d       # Start PostgreSQL
 pnpm install               # Install dependencies
-npx prisma generate        # Generate Prisma Client
-npx prisma migrate dev     # Run DB migrations
-pnpm build                 # Build core (Turbo) + Next.js
+pnpm db:generate           # Generate Prisma Client (and db:migrate as needed)
+pnpm build                 # Build Next.js
 pnpm test                  # Run tests (Vitest)
 pnpm dev                   # Run Next.js dev server (port 3000)
 ```

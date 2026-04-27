@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getHookEventCounts } from "@cursor-consumption/core";
+import { getHookEventCounts } from "@/lib";
 
 export async function GET() {
   try {

@@ -6,7 +6,7 @@ alwaysApply: false
 
 # Next.js ダッシュボード（ルート）コーディングルール
 
-このリポジトリの Web 層は **Next.js（App Router）**、`TypeScript strict`、**shadcn/ui + Tailwind CSS**、**Recharts** を前提とする。ランタイムは **Node.js 20 LTS**、パッケージは **pnpm**（モノレポの `@cursor-consumption/core` を利用）。
+このリポジトリの Web 層は **Next.js（App Router）**、`TypeScript strict`、**shadcn/ui + Tailwind CSS**、**Recharts** を前提とする。ランタイムは **Node.js 20 LTS**、パッケージは **pnpm**。共有ロジックは `src/lib`、アプリは `@/lib` から import する。
 
 ## ディレクトリと責務
 
@@ -16,7 +16,7 @@ alwaysApply: false
 
 ## データ境界
 
-- **永続化・コスト計算・Prisma** は `@cursor-consumption/core` に寄せ、Web では薄いハンドラと表示に徹する。
+- **永続化・コスト計算・Prisma** は `src/lib` に寄せ、Web では薄いハンドラと表示に徹する（`@/lib` から import）。
 - ダッシュボードは **PostgreSQL 経由の内部 API** でデータを読む設計。ブラウザや Route Handler から Cursor 内部 API（`api2.cursor.sh` 等）を直接叩かない（取り込みは Hooks → POST の流れに合わせる）。
 - 料金テーブルはリポジトリ直下の **`pricing/models.json`** を参照する方針と整合させる。
 

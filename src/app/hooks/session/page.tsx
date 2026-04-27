@@ -1,4 +1,4 @@
-import { getSessionEvents } from "@cursor-consumption/core";
+import { getSessionEvents } from "@/lib";
 import { EventTable } from "@/components/event-table";
 
 export default async function SessionEventsPage() {

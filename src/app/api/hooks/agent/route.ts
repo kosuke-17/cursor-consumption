@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAgentEvents } from "@cursor-consumption/core";
+import { getAgentEvents } from "@/lib";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

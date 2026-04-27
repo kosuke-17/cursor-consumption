@@ -61,8 +61,8 @@
 | チャートライブラリ | Recharts | React統合、豊富なグラフ種類 |
 | DB | PostgreSQL + Prisma | 堅牢なRDB、型安全なORM、マイグレーション管理 |
 | SQLiteリーダー(Cursor DB用) | sql.js | Pure JS実装、Cursorのstate.vscdb読み取り専用 |
-| パッケージマネージャ | pnpm | ワークスペース対応、ディスク効率 |
-| モノレポツール | pnpm workspaces + turborepo | ビルド効率、タスク並列実行 |
+| パッケージマネージャ | pnpm | ディスク効率 |
+| ビルド | Next.js（`next build`） | App Router 単一プロジェクト |
 | テスト | Vitest | 高速、TypeScript native |
 | リンター | ESLint + Prettier | 標準的 |
 
@@ -72,44 +72,13 @@
 
 ```
 cursor-consumption/
-├── src/                          # Webダッシュボード (Next.js, リポジトリルート)
-│   ├── app/                      # App Router（ページ・Route Handlers）
-│   └── components/               # 共有 UI
-├── packages/
-│   ├── core/                     # 共通ビジネスロジック
-│   │   ├── src/
-│   │   │   ├── auth/
-│   │   │   │   ├── token-resolver.ts       # セッショントークン取得の抽象化
-│   │   │   │   ├── sqlite-token-reader.ts  # ローカルSQLiteからトークン取得
-│   │   │   │   └── manual-token-input.ts   # 手動入力フォールバック
-│   │   │   ├── api/
-│   │   │   │   ├── cursor-api-client.ts    # Cursor内部API呼び出し
-│   │   │   │   ├── admin-api-client.ts     # Enterprise Admin API
-│   │   │   │   └── types.ts               # APIレスポンス型定義
-│   │   │   ├── pricing/
-│   │   │   │   ├── cost-calculator.ts      # コスト計算エンジン
-│   │   │   │   └── pricing-table.ts        # モデル別料金テーブル
-│   │   │   ├── storage/
-│   │   │   │   ├── prisma.ts               # Prisma Client初期化
-│   │   │   │   └── queries.ts              # クエリ定義
-│   │   │   └── index.ts
-│   │   ├── package.json
-│   │   └── tsconfig.json
-│   │
-│   ├── cli/                      # CLIアプリケーション
-│   │   ├── src/
-│   │   │   ├── commands/
-│   │   │   │   ├── status.ts              # 現在の使用量表示
-│   │   │   │   ├── history.ts             # 履歴表示
-│   │   │   │   ├── sync.ts               # データ同期
-│   │   │   │   └── config.ts             # 設定管理
-│   │   │   ├── formatters/
-│   │   │   │   ├── table.ts              # テーブル表示
-│   │   │   │   └── chart.ts              # ターミナルグラフ
-│   │   │   └── index.ts                  # CLIエントリポイント
-│   │   ├── package.json
-│   │   └── tsconfig.json
-│
+├── src/                          # Next.js (App Router, リポジトリルート)
+│   ├── app/                      # ページ・Route Handlers
+│   ├── components/               # 共有 UI
+│   └── lib/                      # 共通ビジネスロジック（@/lib）
+│       ├── pricing/              # コスト計算・料金テーブル読み込み
+│       ├── storage/              # Prisma 初期化、クエリ、hook 保存
+│       └── index.ts              # 公開 API
 ├── prisma/
 │   ├── schema.prisma             # Prismaスキーマ定義
 │   └── migrations/               # DBマイグレーション（自動生成）
@@ -118,12 +87,10 @@ cursor-consumption/
 ├── docs/
 │   ├── requirements.md
 │   └── system-design.md
-├── package.json                  # ルート (Next.js + pnpm workspaces)
+├── package.json
 ├── next.config.ts
-├── tsconfig.json                 # Next.js 用
-├── pnpm-workspace.yaml
-├── turbo.json
-├── tsconfig.base.json
+├── tsconfig.json
+├── eslint.config.mjs
 ├── CLAUDE.md
 └── .gitignore
 ```
@@ -137,7 +104,7 @@ cursor-consumption/
 セッショントークンの取得を抽象化し、取得方法の変更に耐えられる設計にする。
 
 ```typescript
-// packages/core/src/auth/token-resolver.ts
+// src/lib/auth/token-resolver.ts（想定・未実装の場合は docs を参照）
 
 interface TokenResolver {
   resolve(): Promise<string | null>;
@@ -175,7 +142,7 @@ class TokenResolverChain {
 Cursorの内部APIおよびAdmin APIとの通信を担当。
 
 ```typescript
-// packages/core/src/api/cursor-api-client.ts
+// src/lib/api/cursor-api-client.ts（想定）
 
 interface UsageData {
   items: UsageItem[];
@@ -213,7 +180,7 @@ class CursorApiClient {
 モデル別・トークン種別のコスト計算エンジン。
 
 ```typescript
-// packages/core/src/pricing/cost-calculator.ts
+// src/lib/pricing/cost-calculator.ts
 
 interface PricingEntry {
   model: string;
@@ -548,10 +515,10 @@ const UsageResponseSchema = z.object({
 | ステップ | 内容 |
 |---------|------|
 | 1-1 | プロジェクト初期化（モノレポ、TypeScript、ESLint、Vitest） |
-| 1-2 | `packages/core` — TokenResolver実装（SQLite読み取り） |
-| 1-3 | `packages/core` — CursorApiClient実装（使用量API呼び出し） |
-| 1-4 | `packages/core` — CostCalculator + pricing/models.json |
-| 1-5 | `packages/core` — Storage（Prisma + PostgreSQL、マイグレーション） |
+| 1-2 | `src/lib` — TokenResolver実装（SQLite読み取り） |
+| 1-3 | `src/lib` — CursorApiClient実装（使用量API呼び出し） |
+| 1-4 | `src/lib` — CostCalculator + pricing/models.json |
+| 1-5 | `src/lib` — Storage（Prisma + PostgreSQL、マイグレーション） |
 | 1-6 | `packages/cli` — `ccm status` コマンド |
 | 1-7 | `packages/cli` — `ccm sync` コマンド |
 | 1-8 | `packages/cli` — `ccm history` / `ccm models` コマンド |

@@ -24,7 +24,7 @@ const PricingTableSchema = z.array(PricingEntrySchema);
 export function loadPricingTable(customPath?: string): PricingEntry[] {
   const defaultPath = resolve(
     dirname(fileURLToPath(import.meta.url)),
-    "../../../../pricing/models.json"
+    "../../../pricing/models.json"
   );
   const filePath = customPath ?? defaultPath;
   const raw = readFileSync(filePath, "utf-8");

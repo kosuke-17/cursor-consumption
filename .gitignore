@@ -4,7 +4,7 @@ dist/
 *.tsbuildinfo
 .turbo/
 coverage/
-packages/core/src/generated/
+src/lib/generated/
 .next/
 
 # Cursor Hooks audit log (can grow large)

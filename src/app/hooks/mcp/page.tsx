@@ -1,4 +1,4 @@
-import { getMcpEvents } from "@cursor-consumption/core";
+import { getMcpEvents } from "@/lib";
 import { EventTable } from "@/components/event-table";
 
 export default async function McpEventsPage() {

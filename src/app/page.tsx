@@ -1,4 +1,4 @@
-import { getHookEventCounts } from "@cursor-consumption/core";
+import { getHookEventCounts } from "@/lib";
 
 const CARDS = [
   { key: "tool", label: "Tool Events", href: "/hooks/tool", color: "bg-blue-500" },

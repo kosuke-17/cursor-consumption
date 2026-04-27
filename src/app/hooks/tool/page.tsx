@@ -1,4 +1,4 @@
-import { getToolEvents } from "@cursor-consumption/core";
+import { getToolEvents } from "@/lib";
 import { EventTable } from "@/components/event-table";
 
 export default async function ToolEventsPage() {

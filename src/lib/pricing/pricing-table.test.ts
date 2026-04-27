@@ -1,10 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { loadPricingTable } from "./pricing-table.js";
+import { loadPricingTable } from "./pricing-table";
 import { resolve } from "node:path";
 
 const PRICING_PATH = resolve(
   import.meta.dirname,
-  "../../../../pricing/models.json"
+  "../../../pricing/models.json"
 );
 
 describe("loadPricingTable", () => {

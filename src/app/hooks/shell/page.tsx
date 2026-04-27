@@ -1,4 +1,4 @@
-import { getShellEvents } from "@cursor-consumption/core";
+import { getShellEvents } from "@/lib";
 import { EventTable } from "@/components/event-table";
 
 export default async function ShellEventsPage() {

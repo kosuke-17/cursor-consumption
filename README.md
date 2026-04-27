@@ -23,8 +23,8 @@ cp .env.example .env
 docker compose up -d
 
 # DBマイグレーション & Prisma Client生成
-npx prisma generate
-npx prisma migrate dev
+pnpm db:generate
+pnpm db:migrate
 
 # ビルド
 pnpm build
@@ -33,11 +33,10 @@ pnpm build
 ## プロジェクト構成
 
 ```
-（リポジトリルート）— Webダッシュボード (Next.js, src/)
-packages/
-  core/   — 共通ロジック (コスト計算、DB)
-prisma/   — Prisma スキーマ & マイグレーション
-pricing/  — モデル別料金テーブル (models.json)
+（リポジトリルート）— Next.js（src/app）
+src/lib/     — 共通ロジック（コスト計算、Prisma、hook 保存）
+prisma/      — Prisma スキーマ & マイグレーション
+pricing/     — モデル別料金テーブル (models.json)
 ```
 
 ## ライセンス

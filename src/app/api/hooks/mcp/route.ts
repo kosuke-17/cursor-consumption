@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getMcpEvents } from "@cursor-consumption/core";
+import { getMcpEvents } from "@/lib";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

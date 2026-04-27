@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { saveHookEvent, TABLE_MAP } from "@cursor-consumption/core";
+import { saveHookEvent, TABLE_MAP } from "@/lib";
 
 export async function POST(request: Request) {
   let payload: Record<string, unknown>;

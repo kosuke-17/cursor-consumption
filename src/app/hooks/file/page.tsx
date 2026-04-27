@@ -1,4 +1,4 @@
-import { getFileEvents } from "@cursor-consumption/core";
+import { getFileEvents } from "@/lib";
 import { EventTable } from "@/components/event-table";
 
 export default async function FileEventsPage() {

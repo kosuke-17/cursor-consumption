@@ -6,20 +6,19 @@
     "node": ">=20"
   },
   "scripts": {
-    "predev": "pnpm -w db:generate",
+    "predev": "pnpm db:generate",
     "dev": "next dev",
-    "build": "turbo build && next build",
+    "build": "next build",
     "start": "next start",
-    "test": "turbo test",
-    "lint": "turbo lint",
+    "test": "vitest run",
+    "lint": "next lint",
     "format": "prettier --write .",
     "db:migrate": "prisma migrate dev --config prisma/prisma.config.ts",
-    "db:generate": "prisma generate --config prisma/prisma.config.ts && pnpm --filter @cursor-consumption/core build",
+    "db:generate": "prisma generate --config prisma/prisma.config.ts",
     "db:reset": "prisma migrate reset --config prisma/prisma.config.ts",
     "db:studio": "prisma studio --config prisma/prisma.config.ts"
   },
   "dependencies": {
-    "@cursor-consumption/core": "workspace:*",
     "@prisma/adapter-pg": "^7.0.0",
     "@prisma/client": "^7.0.0",
     "@tailwindcss/postcss": "^4.2.2",
@@ -29,15 +28,18 @@
     "postcss": "^8.5.9",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "tailwindcss": "^4.2.2"
+    "tailwindcss": "^4.2.2",
+    "zod": "^3.24.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.0.0",
+    "@types/node": "^20.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "eslint": "^9.17.0",
+    "eslint-config-next": "^15.0.0",
     "prettier": "^3.4.0",
     "prisma": "^7.0.0",
-    "turbo": "^2.4.0",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0",
     "vitest": "^3.0.0"

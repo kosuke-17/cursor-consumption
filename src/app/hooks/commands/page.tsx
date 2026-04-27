@@ -1,4 +1,4 @@
-import { getCommandEvents } from "@cursor-consumption/core";
+import { getCommandEvents } from "@/lib";
 
 function formatDate(v: unknown) {
   if (!v) return "-";

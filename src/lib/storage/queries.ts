@@ -1,4 +1,4 @@
-import { getPrisma } from "./prisma.js";
+import { getPrisma } from "./prisma";
 
 export interface UsageItem {
   timestamp: Date;

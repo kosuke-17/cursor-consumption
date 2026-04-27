@@ -88,7 +88,7 @@ export function EventTable({
         <table className="w-full text-sm">
           <thead className="bg-gray-900 text-gray-400 text-left">
             <tr>
-              {allColumns.map((col, i) => (
+              {allColumns.map((col) => (
                 <th
                   key={col.key}
                   className="px-4 py-3 font-medium whitespace-nowrap"
