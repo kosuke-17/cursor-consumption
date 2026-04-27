@@ -34,7 +34,7 @@ function extractCommonFields(payload: Payload) {
     model: (payload.model as string) ?? null,
     cursorVersion: (payload.cursor_version as string) ?? null,
     workspaceRoot: Array.isArray(payload.workspace_roots)
-      ? (payload.workspace_roots[0] as string) ?? null
+      ? ((payload.workspace_roots[0] as string) ?? null)
       : null,
     userEmail: (payload.user_email as string) ?? null,
     transcriptPath: (payload.transcript_path as string) ?? null,
@@ -55,7 +55,8 @@ async function saveToolEvent(payload: Payload): Promise<void> {
       agentMessage: (payload.agent_message as string) ?? null,
       errorMessage: (payload.error_message as string) ?? null,
       failureType: (payload.failure_type as string) ?? null,
-      isInterrupt: payload.is_interrupt != null ? Boolean(payload.is_interrupt) : null,
+      isInterrupt:
+        payload.is_interrupt != null ? Boolean(payload.is_interrupt) : null,
     },
   });
 }
@@ -112,22 +113,38 @@ async function saveAgentEvent(payload: Payload): Promise<void> {
       parentConversationId: (payload.parent_conversation_id as string) ?? null,
       toolCallId: (payload.tool_call_id as string) ?? null,
       subagentModel: (payload.subagent_model as string) ?? null,
-      isParallelWorker: payload.is_parallel_worker != null ? Boolean(payload.is_parallel_worker) : null,
+      isParallelWorker:
+        payload.is_parallel_worker != null
+          ? Boolean(payload.is_parallel_worker)
+          : null,
       gitBranch: (payload.git_branch as string) ?? null,
       status: (payload.status as string) ?? null,
       description: (payload.description as string) ?? null,
       summary: (payload.summary as string) ?? null,
-      durationMs: payload.duration_ms != null ? Number(payload.duration_ms) : null,
-      messageCount: payload.message_count != null ? Number(payload.message_count) : null,
-      toolCallCount: payload.tool_call_count != null ? Number(payload.tool_call_count) : null,
+      durationMs:
+        payload.duration_ms != null ? Number(payload.duration_ms) : null,
+      messageCount:
+        payload.message_count != null ? Number(payload.message_count) : null,
+      toolCallCount:
+        payload.tool_call_count != null
+          ? Number(payload.tool_call_count)
+          : null,
       loopCount: payload.loop_count != null ? Number(payload.loop_count) : null,
       modifiedFiles: (payload.modified_files as object) ?? undefined,
       agentTranscriptPath: (payload.agent_transcript_path as string) ?? null,
       text: (payload.text as string) ?? null,
-      inputTokens: payload.input_tokens != null ? Number(payload.input_tokens) : null,
-      outputTokens: payload.output_tokens != null ? Number(payload.output_tokens) : null,
-      cacheReadTokens: payload.cache_read_tokens != null ? Number(payload.cache_read_tokens) : null,
-      cacheWriteTokens: payload.cache_write_tokens != null ? Number(payload.cache_write_tokens) : null,
+      inputTokens:
+        payload.input_tokens != null ? Number(payload.input_tokens) : null,
+      outputTokens:
+        payload.output_tokens != null ? Number(payload.output_tokens) : null,
+      cacheReadTokens:
+        payload.cache_read_tokens != null
+          ? Number(payload.cache_read_tokens)
+          : null,
+      cacheWriteTokens:
+        payload.cache_write_tokens != null
+          ? Number(payload.cache_write_tokens)
+          : null,
     },
   });
 }
@@ -138,21 +155,39 @@ async function saveSessionEvent(payload: Payload): Promise<void> {
     data: {
       ...extractCommonFields(payload),
       sessionId: (payload.session_id as string) ?? null,
-      isBackgroundAgent: payload.is_background_agent != null ? Boolean(payload.is_background_agent) : null,
+      isBackgroundAgent:
+        payload.is_background_agent != null
+          ? Boolean(payload.is_background_agent)
+          : null,
       composerMode: (payload.composer_mode as string) ?? null,
       reason: (payload.reason as string) ?? null,
-      durationMs: payload.duration_ms != null ? Number(payload.duration_ms) : null,
+      durationMs:
+        payload.duration_ms != null ? Number(payload.duration_ms) : null,
       finalStatus: (payload.final_status as string) ?? null,
       errorMessage: (payload.error_message as string) ?? null,
       prompt: (payload.prompt as string) ?? null,
       attachments: (payload.attachments as object) ?? undefined,
       trigger: (payload.trigger as string) ?? null,
-      contextUsagePercent: payload.context_usage_percent != null ? Number(payload.context_usage_percent) : null,
-      contextTokens: payload.context_tokens != null ? Number(payload.context_tokens) : null,
-      contextWindowSize: payload.context_window_size != null ? Number(payload.context_window_size) : null,
-      messageCount: payload.message_count != null ? Number(payload.message_count) : null,
-      messagesToCompact: payload.messages_to_compact != null ? Number(payload.messages_to_compact) : null,
-      isFirstCompaction: payload.is_first_compaction != null ? Boolean(payload.is_first_compaction) : null,
+      contextUsagePercent:
+        payload.context_usage_percent != null
+          ? Number(payload.context_usage_percent)
+          : null,
+      contextTokens:
+        payload.context_tokens != null ? Number(payload.context_tokens) : null,
+      contextWindowSize:
+        payload.context_window_size != null
+          ? Number(payload.context_window_size)
+          : null,
+      messageCount:
+        payload.message_count != null ? Number(payload.message_count) : null,
+      messagesToCompact:
+        payload.messages_to_compact != null
+          ? Number(payload.messages_to_compact)
+          : null,
+      isFirstCompaction:
+        payload.is_first_compaction != null
+          ? Boolean(payload.is_first_compaction)
+          : null,
     },
   });
 }
