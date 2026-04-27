@@ -72,6 +72,9 @@
 
 ```
 cursor-consumption/
+├── src/                          # Webダッシュボード (Next.js, リポジトリルート)
+│   ├── app/                      # App Router（ページ・Route Handlers）
+│   └── components/               # 共有 UI
 ├── packages/
 │   ├── core/                     # 共通ビジネスロジック
 │   │   ├── src/
@@ -106,23 +109,6 @@ cursor-consumption/
 │   │   │   └── index.ts                  # CLIエントリポイント
 │   │   ├── package.json
 │   │   └── tsconfig.json
-│   │
-│   └── web/                      # Webダッシュボード (Phase 2)
-│       ├── src/
-│       │   └── app/
-│       │       ├── page.tsx              # ダッシュボードトップ
-│       │       ├── models/page.tsx       # モデル別分析
-│       │       ├── history/page.tsx      # 履歴・トレンド
-│       │       ├── api/
-│       │       │   ├── usage/route.ts    # 使用量データAPI
-│       │       │   └── sync/route.ts     # 同期トリガーAPI
-│       │       └── components/
-│       │           ├── usage-summary.tsx
-│       │           ├── model-breakdown.tsx
-│       │           ├── cost-chart.tsx
-│       │           └── trend-graph.tsx
-│       ├── package.json
-│       └── tsconfig.json
 │
 ├── prisma/
 │   ├── schema.prisma             # Prismaスキーマ定義
@@ -132,7 +118,9 @@ cursor-consumption/
 ├── docs/
 │   ├── requirements.md
 │   └── system-design.md
-├── package.json                  # ルートpackage.json (pnpm workspaces)
+├── package.json                  # ルート (Next.js + pnpm workspaces)
+├── next.config.ts
+├── tsconfig.json                 # Next.js 用
 ├── pnpm-workspace.yaml
 ├── turbo.json
 ├── tsconfig.base.json
@@ -574,7 +562,7 @@ const UsageResponseSchema = z.object({
 
 | ステップ | 内容 |
 |---------|------|
-| 2-1 | `packages/web` — Next.jsプロジェクト初期化 |
+| 2-1 | リポジトリルート — Next.js（`src/app`）初期化 |
 | 2-2 | APIルート実装（PostgreSQL読み出し） |
 | 2-3 | ダッシュボードトップページ |
 | 2-4 | モデル別分析ページ |

@@ -8,9 +8,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture
 
-Monorepo with two packages under `packages/`:
-- `core` — Shared business logic: cost calculation, Prisma storage
-- `web` — Next.js dashboard with Route Handlers for data ingestion
+Monorepo: Next.js app at the **repository root** (App Router, `src/`) plus a shared package:
+- `packages/core` — Shared business logic: cost calculation, Prisma storage
+- Root `src/app/api/**/route.ts` — Route Handlers for data ingestion
 
 Data flow: Cursor Hooks (`hooks.json` + `.cursor/hooks/audit.mjs`) → Next.js Route Handler (POST) → PostgreSQL
 
@@ -35,9 +35,9 @@ docker compose up -d       # Start PostgreSQL
 pnpm install               # Install dependencies
 npx prisma generate        # Generate Prisma Client
 npx prisma migrate dev     # Run DB migrations
-pnpm build                 # Build all packages
+pnpm build                 # Build core (Turbo) + Next.js
 pnpm test                  # Run tests (Vitest)
-pnpm --filter web dev      # Run web dashboard
+pnpm dev                   # Run Next.js dev server (port 3000)
 ```
 
 Requires `DATABASE_URL` in `.env` (e.g. `postgresql://user:password@localhost:5432/cursor_consumption`).

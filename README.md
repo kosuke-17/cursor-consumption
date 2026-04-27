@@ -33,9 +33,9 @@ pnpm build
 ## プロジェクト構成
 
 ```
+（リポジトリルート）— Webダッシュボード (Next.js, src/)
 packages/
   core/   — 共通ロジック (コスト計算、DB)
-  web/    — Webダッシュボード (Next.js)
 prisma/   — Prisma スキーマ & マイグレーション
 pricing/  — モデル別料金テーブル (models.json)
 ```

@@ -1,10 +1,10 @@
 ---
-description: packages/web（Next.js ダッシュボード）の構成・命名・データ境界
-globs: packages/web/**/*.{ts,tsx}
+description: リポジトリルートの Next.js ダッシュボードの構成・命名・データ境界
+globs: src/**/*.{ts,tsx}
 alwaysApply: false
 ---
 
-# packages/web コーディングルール
+# Next.js ダッシュボード（ルート）コーディングルール
 
 このリポジトリの Web 層は **Next.js（App Router）**、`TypeScript strict`、**shadcn/ui + Tailwind CSS**、**Recharts** を前提とする。ランタイムは **Node.js 20 LTS**、パッケージは **pnpm**（モノレポの `@cursor-consumption/core` を利用）。
 
@@ -12,7 +12,7 @@ alwaysApply: false
 
 - **`src/app/`** — App Router のページとレイアウト（例: `page.tsx`、`models/page.tsx`、`history/page.tsx`）。
 - **`src/app/api/**/route.ts`** — Route Handler のみでサーバー API を定義。クライアントから DB や Prisma を直接呼ばない。
-- **`src/app/components/`** — ページ用の再利用 UI。チャートは Recharts を使う。
+- **`src/components/`** — ページ用の再利用 UI。チャートは Recharts を使う。
 
 ## データ境界
 
@@ -33,7 +33,7 @@ alwaysApply: false
 
 - **コンポーネントファイルは kebab-case**（例: `usage-summary.tsx`、`cost-chart.tsx`）。
 - **React**: 関数コンポーネント。クライアントが必要なら `"use client"` をファイル先頭に明示。
-- **テスト**: Vitest（Web 固有のテストは `packages/web` に配置）。
+- **テスト**: Vitest（Web 固有のテストは `src` 配下に配置）。
 
 ## セキュリティ
 
