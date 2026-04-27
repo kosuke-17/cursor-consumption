@@ -1,4 +1,5 @@
 ---
+name: commit
 description: 変更内容を確認し、Conventional Commits 形式でステージしてコミットする。
 ---
 
